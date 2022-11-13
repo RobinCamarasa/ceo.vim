@@ -1,0 +1,120 @@
+*ceo.txt* functionality for Compilation and Execution Organizer
+
+Author:  Robin Camarasa <http://robincamarasa.github.io>
+
+                          ____ _____ ___  ~
+                         / ___| ____/ _ \ ~
+                        | |   |  _|| | | |~
+                        | |___| |__| |_| |~
+                         \____|_____\___/ ~
+                  
+
+The main idea of this plugin is to have custom compilers adapted to the 
+different programming languages (see |:compiler|), map some keys for easy 
+compilation and debugging utilities
+
+Are currently supported: |python|, |markdown|, |tex|
+
+===============================================================================
+CONTENTS                                              *contextual-text-objects*
+        
+        0. License .................................. |ceo-license|
+        1. Custom compilers ......................... |custom-compilers|
+        2. Filetype compilers ....................... |filetype-compilers|
+        3. Filetype debuggers ....................... |filetype-debuggers|
+        4. Compiling mappings ....................... |compiling-mapping|
+
+===============================================================================
+Section 0: License                                    *ceo-license*
+
+
+Copyright 2022 Robin Camarasa
+
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in 
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN 
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+===============================================================================
+Section 1: Custom compilers                           *custom-compilers*
+
+This section explain the different settings of the available |:compiler|
+
+                                                      *latexmk-compiler* 
+This compiler is largely inspired from the vimtex compiler. 
+<https://github.com/lervag/vimtex>
+Set the |makeprg| to (and adequately set the |errorformat|): 
+    latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" %~
+
+                                                      *markdown-compiler* 
+Set the |makeprg| to (and adequately set the |errorformat|): 
+    pandoc -s % -o %:p:r.pdf~
+
+                                                      *pytest-compiler* 
+This compiler is largely inspired from the pytest-vim-compiler. 
+<https://github.com/6long/pytest-vim-compiler>
+Set the |makeprg| to (and adequately set the |errorformat|): 
+    pytest --color=no --tb=short -q -s %::~
+
+                                                      *python-compiler* 
+This compiler is largely inspired from the python compiler of Enno Nagel
+<enno.nagel+vim@gmail.com>
+Set the |makeprg| to (and adequately set the |errorformat|): 
+    python %~
+
+===============================================================================
+Section 2: Filetype compilers                         *filetype-compilers*
+
+This section presents the default |:compiler| options per |FileType| .
+
+                                                      *ft-python-compiler* 
+If the file start by test_ the default compiler is |pytest-compiler| otherwise
+it is |python-compiler|.
+
+                                                      *ft-tex-compiler* 
+The default compiler is |latexmk-compiler|.
+
+                                                      *ft-markdown-compiler* 
+The default compiler is |markdown-compiler|.
+
+===============================================================================
+Section 3: Filetype debuggers                         *filetype-debuggers*
+
+This section presents the debugging utilities per |FileType| .
+
+                                                      *ft-python-breakpoint*
+<localleader><localleader>      Mark and ipdb breakpoint in the previous line
+                                import ipdb; ipdb.set_trace() ###!!!BREAKPOINT!!! ~
+ 
+===============================================================================
+Section 4: Compiling mappings                         *compiling-mapping*
+
+This section presents the general mapping for compilation.
+
+                                                      *QS*
+QS                              Set the argument of the |makeprg| and launch
+                                the command in the |terminal|
+
+                                                      *QQ*
+QQ                              Relaunch the last command asynchronously and
+                                write the stderr in the |quickfix| list
+
+                                                      *Q!*
+Q!                              Relaunch the last command in the |terminal|
+                                
+                                                      *QD*
+Q!                              Kill the last asynchronous |job| launched via
+                                |QQ|
